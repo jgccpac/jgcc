@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JGCC Digital Sick Report — Medical Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sage: {
+                            50: '#f4f7f4',
+                            100: '#e5ece5',
+                            200: '#cbdccb',
+                            300: '#a7c3a7',
+                            400: '#7ea47e',
+                            500: '#5c855c',
+                            600: '#466b46',
+                            700: '#385538',
+                            800: '#2f452f',
+                            900: '#273927',
+                            950: '#141e14',
+                        },
+                        house: {
+                            taramon: '#D32F2F', // Red
+                            sitara: '#1976D2',  // Blue
+                            razia: '#2E7D32',   // Green
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f4f7f4; }
+        ::-webkit-scrollbar-thumb { background: #a7c3a7; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #7ea47e; }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+        }
+
+        @media print {
+            body { background: white !important; color: black !important; }
+            header, nav, .no-print, .role-switcher, .auth-lock-card { display: none !important; }
+            .print-only { display: block !important; }
+            .printable-card { border: none !important; box-shadow: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-sage-50 font-sans text-sage-950 min-h-screen flex flex-col selection:bg-sage-200 selection:text-sage-900">
+
+    <!-- Top Minimal Sage Header -->
+    <header class="bg-white border-b border-sage-200 shadow-sm relative z-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col lg:flex-row items-center justify-between gap-4">
+            
+            <!-- Brand & Crest Logo -->
+            <div class="flex items-center space-x-3.5">
+                <div class="w-[53px] h-[53px] rounded-2xl bg-sage-100 border border-sage-300 p-1 shadow-sm flex items-center justify-center shrink-0 overflow-hidden relative group">
+                    <img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d4/%E0%A6%9C%E0%A6%AF%E0%A6%BC%E0%A6%AA%E0%A7%81%E0%A6%B0%E0%A6%B9%E0%A6%BE%E0%A6%9F_%E0%A6%97%E0%A6%BE%E0%A6%B0%E0%A7%8D%E0%A6%B2%E0%A6%B8_%E0%A6%95%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%A1%E0%A7%87%E0%A6%9F_%E0%A6%95%E0%A6%B2%E0%A7%87%E0%A6%9C_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B.svg/960px-%E0%A6%9C%E0%A6%AF%E0%A6%BC%E0%A6%AA%E0%A7%81%E0%A6%B0%E0%A6%B9%E0%A6%BE%E0%A6%9F_%E0%A6%97%E0%A6%BE%E0%A6%B0%E0%A7%8D%E0%A6%B2%E0%A6%B8_%E0%A6%95%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%A1%E0%A7%87%E0%A6%9F_%E0%A6%95%E0%A6%B2%E0%A7%87%E0%A6%9C_%E0%A6%B2%E0%A7%8B%E0%A6%97%E0%A7%8B.svg.png?utm_source=bn.wikipedia.org&utm_campaign=index&utm_content=thumbnail" alt="Joypurhat Girls Cadet College Logo" width="53" height="53" style="object-fit: contain;" onerror="document.getElementById('svgFallbackLogo').classList.remove('hidden'); this.style.display='none';">
+                    
+                    <!-- SVG Vector Fallback in case local files are absent -->
+                    <svg id="svgFallbackLogo" class="hidden w-full h-full text-sage-700" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="50" r="46" stroke="#2E7D32" stroke-width="5" fill="#ffffff"/>
+                        <circle cx="50" cy="50" r="38" fill="#ffffff" stroke="#e5ece5" stroke-width="1"/>
+                        <path d="M50 15 L80 40 L50 50 Z" fill="#D32F2F"/>
+                        <path d="M50 50 L20 80 L20 40 Z" fill="#0288D1"/>
+                        <path d="M50 50 L80 80 L20 80 Z" fill="#1976D2"/>
+                        <path d="M50 22 L55 35 L45 35 Z" fill="#ffffff"/>
+                        <circle cx="50" cy="50" r="6" fill="#466b46"/>
+                    </svg>
+                </div>
+
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2 py-0.5 rounded-full bg-sage-100 text-sage-800 text-[10px] font-extrabold tracking-wider uppercase border border-sage-200">
+                            <i class="fa-solid fa-hospital-user mr-1 text-sage-600"></i> Medical Portal
+                        </span>
+                        <span class="text-xs text-sage-500 font-medium hidden sm:inline">• Joypurhat Girls' Cadet College</span>
+                    </div>
+                    <h1 class="font-heading font-extrabold text-xl sm:text-2xl tracking-tight text-sage-900 uppercase mt-0.5 flex items-center gap-2">
+                        JGCC Digital Sick Report
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Role Selector Controls -->
+            <div class="flex items-center bg-sage-100/80 p-1.5 rounded-2xl border border-sage-200/80 shadow-inner overflow-x-auto max-w-full role-switcher">
+                <span class="text-[11px] font-bold text-sage-700 uppercase tracking-wider px-2.5 shrink-0 flex items-center gap-1.5">
+                    <i class="fa-solid fa-shield-cat text-sage-600"></i> Terminal:
+                </span>
+                
+                <button onclick="selectRole('cadet')" id="roleBtn-cadet" class="role-btn text-xs font-bold px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span>Cadet Portal</span>
+                </button>
+
+                <button onclick="selectRole('hm')" id="roleBtn-hm" class="role-btn text-xs font-bold px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-house-chimney-medical"></i>
+                    <span>Housemaster</span>
+                    <span id="hmBadgeCount" class="hidden bg-rose-600 text-white font-bold px-1.5 py-0.5 rounded-full text-[10px]">0</span>
+                </button>
+
+                <button onclick="selectRole('ha')" id="roleBtn-ha" class="role-btn text-xs font-bold px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-bed-pulse"></i>
+                    <span>Hospital Attendant</span>
+                    <span id="haBadgeCount" class="hidden bg-sky-600 text-white font-bold px-1.5 py-0.5 rounded-full text-[10px]">0</span>
+                </button>
+
+                <button onclick="selectRole('mo')" id="roleBtn-mo" class="role-btn text-xs font-bold px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center space-x-2 whitespace-nowrap">
+                    <i class="fa-solid fa-user-doctor"></i>
+                    <span>Medical Officer</span>
+                    <span id="moBadgeCount" class="hidden bg-sage-700 text-white font-bold px-1.5 py-0.5 rounded-full text-[10px]">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Contextual Status Sub-Bar -->
+    <div class="bg-sage-100/60 border-b border-sage-200 py-2 px-4 text-xs text-sage-800">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+            <div id="roleDescription" class="flex items-center space-x-2 font-medium">
+                <!-- Injected via JS -->
+            </div>
+            
+            <div class="flex items-center space-x-4 text-sage-700">
+                <!-- House Crest Tags -->
+                <div class="flex items-center space-x-1.5 text-[11px] font-semibold">
+                    <span class="text-sage-600 font-bold">Houses:</span>
+                    <span class="px-2 py-0.5 rounded-md text-white bg-[#D32F2F] font-bold shadow-sm">Taramon</span>
+                    <span class="px-2 py-0.5 rounded-md text-white bg-[#1976D2] font-bold shadow-sm">Sitara</span>
+                    <span class="px-2 py-0.5 rounded-md text-white bg-[#2E7D32] font-bold shadow-sm">Razia</span>
+                </div>
+                
+                <span class="font-mono text-sage-900 font-bold bg-white px-2.5 py-1 rounded-lg border border-sage-200 shadow-sm flex items-center gap-1.5">
+                    <i class="fa-regular fa-clock text-sage-600"></i> <span id="liveClock">--:--:--</span>
+                </span>
+                
+                <button onclick="clearAllData()" title="Reset local storage session" class="hover:text-rose-600 text-sage-500 text-xs transition-colors p-1">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- Toast Notifications Container -->
+        <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+        <!-- CADET PORTAL SECTION -->
+        <section id="view-cadet" class="role-view hidden space-y-6">
+
+            <!-- Cadet Auth Container (When not logged in) -->
+            <div id="cadetAuthContainer" class="max-w-md mx-auto bg-white rounded-3xl shadow-xl border border-sage-200 overflow-hidden">
+                <div class="bg-sage-800 text-white p-6 border-b border-sage-900 text-center relative">
+                    <div class="w-16 h-16 bg-sage-100 text-sage-800 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-black shadow-md border border-sage-200">
+                        <i class="fa-solid fa-kit-medical text-sage-700"></i>
+                    </div>
+                    <h2 class="font-heading font-bold text-xl text-white uppercase tracking-tight">Cadet Medical Access</h2>
+                    <p class="text-xs text-sage-200 mt-1 font-medium">Log in or create cadet profile for sick call entries</p>
+
+                    <!-- Auth Switcher -->
+                    <div class="flex bg-sage-900/60 p-1 rounded-2xl mt-5 border border-sage-700/50">
+                        <button onclick="toggleAuthTab('login')" id="tabBtn-login" class="flex-1 py-2 text-xs font-bold rounded-xl transition-all bg-white text-sage-900 shadow">
+                            Cadet Login
+                        </button>
+                        <button onclick="toggleAuthTab('register')" id="tabBtn-register" class="flex-1 py-2 text-xs font-bold rounded-xl transition-all text-sage-200 hover:text-white">
+                            New Cadet Register
+                        </button>
+                    </div>
+                </div>
+
+                <!-- LOGIN FORM -->
+                <form id="cadetLoginForm" onsubmit="handleCadetLogin(event)" class="p-6 space-y-4 bg-white">
+                    <div>
+                        <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                            <i class="fa-solid fa-id-card text-sage-600"></i> Cadet Number *
+                        </label>
+                        <input type="text" id="loginCadetNo" required placeholder="e.g. 1042" class="w-full text-xs p-3 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 focus:bg-white outline-none font-bold text-sage-900 transition-all">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+                            <i class="fa-solid fa-lock text-sage-600"></i> Account Password *
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="loginPassword" required placeholder="Enter password" class="w-full text-xs p-3 pr-10 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 focus:bg-white outline-none font-bold text-sage-900 transition-all">
+                            <button type="button" onclick="togglePasswordVisibility('loginPassword', this)" title="Toggle password visibility" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-sage-500 hover:text-sage-800 transition-colors">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-sage-700 hover:bg-sage-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Authenticate & Access Sick Call</span>
+                    </button>
+                </form>
+
+                <!-- REGISTER FORM -->
+                <form id="cadetRegisterForm" onsubmit="handleCadetRegister(event)" class="p-6 space-y-4 bg-white hidden">
+                    <div>
+                        <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1">Full Name *</label>
+                        <input type="text" id="regName" required placeholder="e.g. Cadet Nusrat Jahan" class="w-full text-xs p-2.5 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 outline-none font-bold text-sage-900">
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1">Cadet Number *</label>
+                            <input type="text" id="regCadetNo" required placeholder="e.g. 1042" class="w-full text-xs p-2.5 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 outline-none font-bold text-sage-900">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1">Class / Form *</label>
+                            <select id="regClass" required class="w-full text-xs p-2.5 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 outline-none font-semibold text-sage-900">
+                                <option value="Class VII">Class VII</option>
+                                <option value="Class VIII">Class VIII</option>
+                                <option value="Class IX">Class IX</option>
+                                <option value="Class X">Class X</option>
+                                <option value="Class XI">Class XI</option>
+                                <option value="Class XII">Class XII</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1">Select Cadet House *</label>
+                        <select id="regHouse" required class="w-full text-xs p-2.5 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 outline-none font-bold text-sage-900">
+                            <option value="Taramon House">🔴 Taramon House (Red)</option>
+                            <option value="Sitara House">🔵 Sitara House (Blue)</option>
+                            <option value="Razia House">🟢 Razia House (Green)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1">Set Account Password *</label>
+                        <div class="relative">
+                            <input type="password" id="regPassword" required placeholder="Enter password" class="w-full text-xs p-2.5 pr-10 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 outline-none font-bold text-sage-900">
+                            <button type="button" onclick="togglePasswordVisibility('regPassword', this)" title="Toggle password visibility" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-sage-500 hover:text-sage-800 transition-colors">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-sage-800 hover:bg-sage-900 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Register Account Profile</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- CADET DASHBOARD (When Logged In) -->
+            <div id="cadetDashboard" class="hidden space-y-6">
+                <!-- Cadet Profile Header Banner -->
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-sage-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center space-x-4">
+                        <div id="activeCadetAvatar" class="w-14 h-14 rounded-2xl bg-sage-600 text-white font-black text-2xl flex items-center justify-center shadow-md">
+                            C
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h3 id="activeCadetName" class="font-heading font-bold text-lg text-sage-950">Cadet Name</h3>
+                                <span id="activeCadetNoBadge" class="bg-sage-100 border border-sage-300 text-sage-800 text-xs font-mono font-bold px-2.5 py-0.5 rounded-full">#0000</span>
+                            </div>
+                            <p class="text-xs text-sage-600 flex items-center gap-2 mt-1">
+                                <span id="activeCadetHouseBadge">--</span>
+                                <span class="text-sage-300">•</span>
+                                <span id="activeCadetClass" class="font-semibold text-sage-700">Class --</span>
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="cadetLogout()" class="px-4 py-2 bg-sage-100 hover:bg-rose-50 text-sage-700 hover:text-rose-700 text-xs font-bold rounded-xl border border-sage-200 hover:border-rose-200 transition-colors flex items-center space-x-1.5">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Log Out</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Sick Report Entry Form -->
+                    <div class="lg:col-span-1 bg-white rounded-3xl shadow-sm border border-sage-200 overflow-hidden">
+                        <div class="bg-sage-700 text-white px-5 py-4 border-b border-sage-800 flex items-center justify-between">
+                            <h2 class="font-heading font-bold text-sm uppercase tracking-wider text-white flex items-center">
+                                <i class="fa-solid fa-notes-medical mr-2 text-sage-200"></i> New Sick Report Entry
+                            </h2>
+                            <span class="text-[10px] bg-sage-800 text-sage-100 font-bold px-2 py-0.5 rounded-md uppercase border border-sage-600">Form</span>
+                        </div>
+
+                        <form id="sickReportForm" onsubmit="handleCadetSubmitReport(event)" class="p-5 space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1 flex items-center gap-1">
+                                    <i class="fa-solid fa-notes-medical text-sage-600"></i> Primary Symptom / Complaint *
+                                </label>
+                                <input type="text" id="symptom" required placeholder="e.g. High Fever, Cough, Sprained Ankle" class="w-full text-xs p-3 bg-sage-50/70 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 focus:bg-white outline-none font-semibold text-sage-900">
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1">Severity *</label>
+                                    <select id="severity" required class="w-full text-xs p-2.5 bg-sage-50/70 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 focus:bg-white outline-none font-semibold text-sage-900">
+                                        <option value="Mild">Mild</option>
+                                        <option value="Moderate">Moderate</option>
+                                        <option value="Severe">Severe (Urgent)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1">Onset Time *</label>
+                                    <select id="onsetTime" required class="w-full text-xs p-2.5 bg-sage-50/70 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 focus:bg-white outline-none font-semibold text-sage-900">
+                                        <option value="This Morning">This Morning</option>
+                                        <option value="Last Night">Last Night</option>
+                                        <option value="24 Hours Ago">24 Hours Ago</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1">Additional Notes</label>
+                                <textarea id="cadetNotes" rows="3" placeholder="Context for Housemaster & Duty Medical Officer..." class="w-full text-xs p-3 bg-sage-50/70 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 focus:bg-white outline-none font-medium text-sage-900 resize-none"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full py-3.5 bg-sage-700 hover:bg-sage-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-paper-plane"></i>
+                                <span>Submit Report to Housemaster</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Personal Sick Call History Track -->
+                    <div class="lg:col-span-2 space-y-4">
+                        <div class="bg-white rounded-3xl shadow-sm border border-sage-200 p-5">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-sage-200 gap-2">
+                                <div>
+                                    <h3 class="font-heading font-bold text-base text-sage-950 flex items-center">
+                                        <i class="fa-solid fa-clock-rotate-left mr-2 text-sage-600"></i>
+                                        My Filed Sick Call Status
+                                    </h3>
+                                    <p class="text-xs text-sage-600">Real-time workflow tracking from Housemaster permission to Doctor checkup</p>
+                                </div>
+                            </div>
+
+                            <div id="cadetPersonalReportsList" class="space-y-3 max-h-[500px] overflow-y-auto pr-1 mt-4">
+                                <!-- Injected via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOUSEMASTER PORTAL SECTION -->
+        <section id="view-hm" class="role-view hidden space-y-6">
+
+            <!-- Housemaster Login Lock Card -->
+            <div id="hmAuthLock" class="max-w-md mx-auto bg-white rounded-3xl shadow-xl border border-sage-200 overflow-hidden">
+                <div class="bg-sage-800 text-white p-6 border-b border-sage-900 text-center">
+                    <div class="w-16 h-16 bg-sage-100 text-sage-800 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-black shadow-md border border-sage-200">
+                        <i class="fa-solid fa-house-chimney-medical text-sage-700"></i>
+                    </div>
+                    <h2 class="font-heading font-bold text-xl text-white uppercase tracking-tight">Housemaster Desk</h2>
+                    <p class="text-xs text-sage-200 mt-1">Authenticate house desk to issue sick call permissions</p>
+                </div>
+
+                <form id="hmLoginForm" onsubmit="handleHmLogin(event)" class="p-6 space-y-4 bg-white">
+                    <div>
+                        <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1.5">Select Cadet House *</label>
+                        <select id="hmLoginHouse" required class="w-full text-xs p-3 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 outline-none font-bold text-sage-900">
+                            <option value="Taramon House">🔴 Taramon House (Red)</option>
+                            <option value="Sitara House">🔵 Sitara House (Blue)</option>
+                            <option value="Razia House">🟢 Razia House (Green)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1.5">Encrypted Housemaster Passkey *</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-sage-500 pointer-events-none"><i class="fa-solid fa-key"></i></span>
+                            <input type="password" id="hmLoginPasskey" required placeholder="Enter Housemaster Passkey" class="w-full pl-10 pr-10 text-xs p-3 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 outline-none font-bold text-sage-900">
+                            <button type="button" onclick="togglePasswordVisibility('hmLoginPasskey', this)" title="Toggle passkey visibility" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-sage-500 hover:text-sage-800 transition-colors">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-sage-700 hover:bg-sage-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Authenticate Housemaster Desk</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Housemaster Authenticated Station -->
+            <div id="hmDashboard" class="hidden space-y-6">
+                <!-- Housemaster Banner -->
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-sage-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center space-x-4">
+                        <div id="activeHmAvatar" class="w-14 h-14 rounded-2xl bg-sage-700 text-white font-black text-xl flex items-center justify-center shadow">
+                            HM
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h3 id="activeHmHouseTitle" class="font-heading font-bold text-lg text-sage-950">Housemaster Desk</h3>
+                                <span class="bg-sage-100 text-sage-800 border border-sage-300 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">Authenticated Desk</span>
+                            </div>
+                            <p class="text-xs text-sage-600 mt-1">
+                                Managing sick permissions exclusively for <strong id="activeHmHouseName" class="text-sage-900">--</strong> cadets.
+                            </p>
+                        </div>
+                    </div>
+                    <button onclick="hmLogout()" class="px-4 py-2 bg-sage-100 hover:bg-rose-50 text-sage-700 hover:text-rose-700 text-xs font-bold rounded-xl border border-sage-200 hover:border-rose-200 transition-colors flex items-center space-x-1.5">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>Lock Desk</span>
+                    </button>
+                </div>
+
+                <!-- Housemaster Table -->
+                <div class="bg-white rounded-3xl shadow-sm border border-sage-200 overflow-hidden">
+                    <div class="bg-sage-50 p-4 border-b border-sage-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div>
+                            <h2 class="font-heading font-bold text-sm text-sage-900 uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-square-check text-sage-600"></i> Housemaster Permission Control Sheet
+                            </h2>
+                            <p class="text-xs text-sage-600">Tick checkmarks to permit cadets to attend Medical Officer examination.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-sage-100/70 text-sage-800 text-[11px] uppercase font-bold tracking-wider border-b border-sage-200">
+                                        <th class="py-3 px-4">Housemaster Permission</th>
+                                        <th class="py-3 px-4">Cadet Particulars</th>
+                                        <th class="py-3 px-4">House & Class</th>
+                                        <th class="py-3 px-4">Symptom & Severity</th>
+                                        <th class="py-3 px-4">Report Time</th>
+                                        <th class="py-3 px-4">MO Status</th>
+                                        <th class="py-3 px-4 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hmTableBody" class="divide-y divide-sage-100 text-xs font-medium">
+                                    <!-- Injected via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOSPITAL ATTENDANT PORTAL -->
+        <section id="view-ha" class="role-view hidden space-y-6">
+
+            <!-- Hospital Attendant Lock Container -->
+            <div id="haAuthLock" class="max-w-md mx-auto bg-white rounded-3xl shadow-xl border border-sage-200 overflow-hidden">
+                <div class="bg-sage-800 text-white p-6 border-b border-sage-900 text-center">
+                    <div class="w-16 h-16 bg-sage-100 text-sage-800 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-black shadow-md border border-sage-200">
+                        <i class="fa-solid fa-bed-pulse text-sage-700"></i>
+                    </div>
+                    <h2 class="font-heading font-bold text-xl text-white uppercase tracking-tight">Attendant Passkey</h2>
+                    <p class="text-xs text-sage-200 mt-1">Hospital night shift log and parade sheet station</p>
+                </div>
+
+                <form id="haLoginForm" onsubmit="handleHaLogin(event)" class="p-6 space-y-4 bg-white">
+                    <div>
+                        <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1.5">Hospital Attendant Security Key *</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-sage-500 pointer-events-none"><i class="fa-solid fa-key"></i></span>
+                            <input type="password" id="haLoginPasskey" required placeholder="Enter Attendant Passkey" class="w-full pl-10 pr-10 text-xs p-3 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 outline-none font-bold text-sage-900">
+                            <button type="button" onclick="togglePasswordVisibility('haLoginPasskey', this)" title="Toggle passkey visibility" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-sage-500 hover:text-sage-800 transition-colors">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-sage-700 hover:bg-sage-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>Unlock Attendant Station</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Attendant Authenticated Dashboard -->
+            <div id="haDashboard" class="hidden space-y-6">
+                <div class="bg-white p-5 rounded-3xl shadow-sm border border-sage-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-14 h-14 rounded-2xl bg-sage-700 text-white font-black text-xl flex items-center justify-center shadow">
+                            <i class="fa-solid fa-bed-pulse"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-heading font-bold text-lg text-sage-950">Hospital Attendant Station</h3>
+                            <p class="text-xs text-sage-600">Logs housemaster-permitted entries for morning MI Parade with the Duty Doctor.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="printNightDutySummary()" class="px-4 py-2 bg-sage-700 hover:bg-sage-800 text-xs text-white font-bold rounded-xl shadow transition-colors flex items-center space-x-2">
+                            <i class="fa-solid fa-print"></i>
+                            <span>Print MI Parade Sheet</span>
+                        </button>
+                        <button onclick="haLogout()" class="px-3 py-2 bg-sage-100 hover:bg-rose-50 text-sage-700 text-xs font-bold rounded-xl border border-sage-200 transition-colors">
+                            Lock Station
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-3xl shadow-sm border border-sage-200 p-5 space-y-4">
+                    <div class="flex items-center justify-between pb-3 border-b border-sage-200">
+                        <span class="text-xs font-bold text-sage-800 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-filter text-sage-600"></i> House Filter:
+                        </span>
+                        <select id="haHouseFilter" onchange="renderHaReports()" class="text-xs border border-sage-200 rounded-xl px-3 py-1.5 bg-sage-50 font-bold text-sage-900 outline-none">
+                            <option value="ALL">All 3 Houses</option>
+                            <option value="Taramon House">🔴 Taramon House</option>
+                            <option value="Sitara House">🔵 Sitara House</option>
+                            <option value="Razia House">🟢 Razia House</option>
+                        </select>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-sage-100/70 text-sage-800 text-[11px] uppercase font-bold tracking-wider border-b border-sage-200">
+                                    <th class="py-3 px-4">Cadet Particulars</th>
+                                    <th class="py-3 px-4">House</th>
+                                    <th class="py-3 px-4">Symptom</th>
+                                    <th class="py-3 px-4">HM Permission</th>
+                                    <th class="py-3 px-4">Night Shift Status</th>
+                                    <th class="py-3 px-4">MO Terminal Queue</th>
+                                </tr>
+                            </thead>
+                            <tbody id="haTableBody" class="divide-y divide-sage-100 text-xs font-medium">
+                                <!-- Injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SOLE MEDICAL OFFICER PORTAL SECTION -->
+        <section id="view-mo" class="role-view hidden space-y-6">
+
+            <!-- MO Lock Container -->
+            <div id="moAuthLock" class="max-w-md mx-auto bg-white rounded-3xl shadow-xl border border-sage-200 overflow-hidden">
+                <div class="bg-sage-800 text-white p-6 border-b border-sage-900 text-center">
+                    <div class="w-16 h-16 bg-sage-100 text-sage-800 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-black shadow-md border border-sage-200">
+                        <i class="fa-solid fa-user-doctor text-sage-700"></i>
+                    </div>
+                    <h2 class="font-heading font-bold text-xl text-white uppercase tracking-tight">Medical Officer Terminal</h2>
+                    <p class="text-xs text-sage-200 mt-1">Duty Doctor authenticated medical desk</p>
+                </div>
+
+                <form id="moLoginForm" onsubmit="handleMoLogin(event)" class="p-6 space-y-4 bg-white">
+                    <div>
+                        <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1.5">Medical Officer Security Key *</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-sage-500 pointer-events-none"><i class="fa-solid fa-key"></i></span>
+                            <input type="password" id="moLoginPasskey" required placeholder="Enter MO Security Key" class="w-full pl-10 pr-10 text-xs p-3 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 outline-none font-bold text-sage-900">
+                            <button type="button" onclick="togglePasswordVisibility('moLoginPasskey', this)" title="Toggle passkey visibility" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-sage-500 hover:text-sage-800 transition-colors">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 bg-sage-700 hover:bg-sage-800 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-laptop-medical"></i>
+                        <span>Unlock Medical Officer Desk</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- MO Authenticated Terminal -->
+            <div id="moDashboard" class="hidden space-y-6">
+                <!-- Banner -->
+                <div class="bg-white p-6 rounded-3xl shadow-sm border-2 border-sage-300 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 rounded-2xl bg-sage-700 text-white flex items-center justify-center text-2xl font-black shadow-md shrink-0">
+                            <i class="fa-solid fa-user-doctor"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h2 class="font-heading font-bold text-lg text-sage-950 uppercase">JGCC Medical Officer (MO) Terminal</h2>
+                                <span class="bg-sage-100 text-sage-800 text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full border border-sage-300">Authorized Doctor</span>
+                            </div>
+                            <p class="text-xs text-sage-600 mt-1">
+                                Receiving permitted sick call reports from <strong>Taramon House</strong>, <strong>Sitara House</strong>, and <strong>Razia House</strong>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center space-x-3 shrink-0">
+                        <div class="flex items-center space-x-2 bg-sage-50 px-3 py-2 rounded-xl border border-sage-200">
+                            <label class="text-xs text-sage-700 font-bold uppercase flex items-center gap-1"><i class="fa-solid fa-filter"></i> House:</label>
+                            <select id="moHouseFilter" onchange="renderMoReports()" class="bg-white text-sage-900 text-xs font-bold rounded-lg px-2.5 py-1 outline-none border border-sage-300">
+                                <option value="ALL">All 3 Houses</option>
+                                <option value="Taramon House">🔴 Taramon House</option>
+                                <option value="Sitara House">🔵 Sitara House</option>
+                                <option value="Razia House">🟢 Razia House</option>
+                            </select>
+                        </div>
+                        <button onclick="moLogout()" class="px-3.5 py-2 bg-sage-100 hover:bg-rose-50 text-sage-700 hover:text-rose-700 text-xs font-bold rounded-xl border border-sage-200 transition-colors">
+                            Lock Desk
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Doctor Queue Table -->
+                <div class="bg-white rounded-3xl shadow-sm border border-sage-200 overflow-hidden">
+                    <div class="p-4 bg-sage-50 border-b border-sage-200 flex items-center justify-between">
+                        <h3 class="font-heading font-bold text-sm text-sage-900 uppercase tracking-wider flex items-center">
+                            <i class="fa-solid fa-stethoscope mr-2 text-sage-600"></i> Permitted Sick Call Doctor Queue
+                        </h3>
+                        <span class="text-xs text-sage-600 font-semibold"><i class="fa-solid fa-circle-check mr-1 text-sage-600"></i> Checkmark approves clinical prescription</span>
+                    </div>
+
+                    <div class="p-4">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-sage-100/70 text-sage-800 text-[11px] uppercase font-bold tracking-wider border-b border-sage-200">
+                                        <th class="py-3 px-4">MO Checkmark</th>
+                                        <th class="py-3 px-4">Cadet Particulars</th>
+                                        <th class="py-3 px-4">House & Class</th>
+                                        <th class="py-3 px-4">Symptom</th>
+                                        <th class="py-3 px-4">HM Status</th>
+                                        <th class="py-3 px-4">Clinical Diagnosis & Disposition</th>
+                                        <th class="py-3 px-4 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="moTableBody" class="divide-y divide-sage-100 text-xs font-medium">
+                                    <!-- Injected via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MO Diagnosis & Prescription Modal -->
+    <div id="moModal" class="fixed inset-0 bg-sage-950/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl border border-sage-200 overflow-hidden">
+            <div class="bg-sage-800 text-white px-6 py-4 flex items-center justify-between border-b border-sage-900">
+                <h3 class="font-heading font-bold text-sm text-white flex items-center">
+                    <i class="fa-solid fa-prescription mr-2 text-sage-200"></i> Medical Officer Examination & Prescription
+                </h3>
+                <button onclick="closeMoModal()" class="text-sage-300 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            
+            <form id="moModalForm" onsubmit="saveMoDiagnosis(event)" class="p-6 space-y-4">
+                <input type="hidden" id="modalReportId">
+                
+                <div class="bg-sage-50 p-3.5 rounded-2xl border border-sage-200 text-xs space-y-1">
+                    <p class="font-bold text-sage-900" id="modalCadetTitle">Cadet Particulars</p>
+                    <p class="text-sage-600" id="modalSymptomText">Symptom details</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1">Clinical Diagnosis *</label>
+                    <input type="text" id="moDiagnosis" required placeholder="e.g. Viral Fever, Acute Tonsillitis, Ankle Sprain" class="w-full text-xs p-3 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 outline-none font-bold text-sage-900">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1">Prescription & Advice</label>
+                    <textarea id="moPrescription" rows="2" placeholder="e.g. Tab Paracetamol 500mg, Bed rest, Warm water gargle..." class="w-full text-xs p-3 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 outline-none font-medium text-sage-900 resize-none"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-sage-800 uppercase tracking-wider mb-1">Medical Disposition *</label>
+                    <select id="moDisposition" required class="w-full text-xs p-3 bg-sage-50 border border-sage-200 rounded-xl focus:ring-2 focus:ring-sage-500 outline-none font-bold text-sage-900">
+                        <option value="Attended & Fit for Duty">Attended MI Room (Fit for Class/Drill)</option>
+                        <option value="Light Duty / Exemption (1 Day)">Exemption / Light Duty (1 Day)</option>
+                        <option value="House Bed Rest (1 Day)">House Bed Rest (1 Day)</option>
+                        <option value="House Bed Rest (2 Days)">House Bed Rest (2 Days)</option>
+                        <option value="Admitted to MI Sick Bay">Admitted to Hospital Sick Bay</option>
+                        <option value="Referred to CMH (Combined Military Hospital)">Referred to CMH / Specialist</option>
+                    </select>
+                </div>
+
+                <div class="pt-2 flex items-center justify-end space-x-2">
+                    <button type="button" onclick="closeMoModal()" class="px-4 py-2 bg-sage-100 hover:bg-sage-200 text-sage-800 font-bold text-xs rounded-xl transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-5 py-2.5 bg-sage-700 hover:bg-sage-800 text-white font-bold text-xs rounded-xl shadow transition-colors flex items-center space-x-1.5">
+                        <i class="fa-solid fa-square-check"></i>
+                        <span>Checkmark & Save Prescription</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Printable MI Parade Sheet Modal -->
+    <div id="printModal" class="fixed inset-0 bg-sage-950/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl p-6 space-y-4 max-h-[90vh] overflow-y-auto">
+            <div class="text-center border-b border-sage-200 pb-4">
+                <h2 class="font-heading font-black text-lg text-sage-950 uppercase">JOYPURHAT GIRLS' CADET COLLEGE</h2>
+                <p class="text-xs text-sage-600 font-bold uppercase tracking-wider">MEDICAL CENTRE — DAILY MI PARADE STATE</p>
+                <p class="text-[11px] text-sage-500 mt-1" id="printDateStr">Generated on: --</p>
+            </div>
+
+            <div id="printContent" class="space-y-4 text-xs">
+                <!-- Injected dynamically -->
+            </div>
+
+            <div class="flex justify-end space-x-3 border-t border-sage-200 pt-4 no-print">
+                <button onclick="closePrintModal()" class="px-4 py-2 bg-sage-100 hover:bg-sage-200 text-sage-800 font-bold text-xs rounded-xl">Close</button>
+                <button onclick="window.print()" class="px-5 py-2 bg-sage-800 hover:bg-sage-900 text-white font-bold text-xs rounded-xl flex items-center space-x-1.5">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Print Parade Sheet</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const CADETS_KEY = 'jgcc_registered_cadets_v2';
+        const REPORTS_KEY = 'jgcc_sick_reports_v2';
+        const PASSKEYS_KEY = 'jgcc_passkeys_hashes_v4';
+        const SESSION_CADET_KEY = 'jgcc_session_cadet';
+        const SESSION_HM_KEY = 'jgcc_session_hm';
+        const SESSION_HA_KEY = 'jgcc_session_ha';
+        const SESSION_MO_KEY = 'jgcc_session_mo';
+
+        let currentRole = 'cadet';
+        let registeredCadets = [];
+        let reports = [];
+
+        let passkeyPlain = {
+            'Taramon House': 'taramongriffins',
+            'Sitara House': 'sitaratigers',
+            'Razia House': 'raziaeagles',
+            'HA': 'jgcc2026',
+            'MO': 'jgccmo2026'
+        };
+
+        let passkeyHashes = {};
+
+        let activeCadet = null;
+        let activeHmHouse = null;
+        let isHaAuthenticated = false;
+        let isMoAuthenticated = false;
+
+        window.onload = async function() {
+            setInterval(updateClock, 1000);
+            updateClock();
+            await loadStorageData();
+            selectRole('cadet');
+        };
+
+        function togglePasswordVisibility(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                if (icon) {
+                    icon.className = 'fa-solid fa-eye-slash';
+                }
+            } else {
+                input.type = 'password';
+                if (icon) {
+                    icon.className = 'fa-solid fa-eye';
+                }
+            }
+        }
+
+        function updateClock() {
+            document.getElementById('liveClock').textContent = new Date().toLocaleTimeString();
+        }
+
+        async function sha256(str) {
+            const buffer = new TextEncoder().encode(str);
+            const digest = await crypto.subtle.digest('SHA-256', buffer);
+            return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function loadStorageData() {
+            try {
+                const loadedCadets = localStorage.getItem(CADETS_KEY);
+                registeredCadets = loadedCadets ? JSON.parse(loadedCadets) : [];
+
+                const loadedReports = localStorage.getItem(REPORTS_KEY);
+                reports = loadedReports ? JSON.parse(loadedReports) : [];
+
+                const loadedKeys = localStorage.getItem(PASSKEYS_KEY);
+                if (loadedKeys) {
+                    passkeyHashes = JSON.parse(loadedKeys);
+                    passkeyHashes['Taramon House'] = await sha256(passkeyPlain['Taramon House']);
+                } else {
+                    passkeyHashes = {
+                        'Taramon House': await sha256(passkeyPlain['Taramon House']),
+                        'Sitara House': await sha256(passkeyPlain['Sitara House']),
+                        'Razia House': await sha256(passkeyPlain['Razia House']),
+                        'HA': await sha256(passkeyPlain['HA']),
+                        'MO': await sha256(passkeyPlain['MO'])
+                    };
+                    localStorage.setItem(PASSKEYS_KEY, JSON.stringify(passkeyHashes));
+                }
+
+                activeCadet = JSON.parse(localStorage.getItem(SESSION_CADET_KEY) || 'null');
+                activeHmHouse = localStorage.getItem(SESSION_HM_KEY) || null;
+                isHaAuthenticated = localStorage.getItem(SESSION_HA_KEY) === 'true';
+                isMoAuthenticated = localStorage.getItem(SESSION_MO_KEY) === 'true';
+
+            } catch(e) {
+                console.error("Storage error:", e);
+            }
+        }
+
+        function saveCadets() {
+            localStorage.setItem(CADETS_KEY, JSON.stringify(registeredCadets));
+        }
+
+        function saveReports() {
+            localStorage.setItem(REPORTS_KEY, JSON.stringify(reports));
+            updateBadgesAndStats();
+        }
+
+        function clearAllData() {
+            if (confirm("Are you sure you want to reset all registered accounts and sick call reports?")) {
+                localStorage.removeItem(CADETS_KEY);
+                localStorage.removeItem(REPORTS_KEY);
+                localStorage.removeItem(SESSION_CADET_KEY);
+                localStorage.removeItem(SESSION_HM_KEY);
+                localStorage.removeItem(SESSION_HA_KEY);
+                localStorage.removeItem(SESSION_MO_KEY);
+
+                registeredCadets = [];
+                reports = [];
+                activeCadet = null;
+                activeHmHouse = null;
+                isHaAuthenticated = false;
+                isMoAuthenticated = false;
+
+                selectRole('cadet');
+                showToast("All portal data and session states cleared.", "info");
+            }
+        }
+
+        function selectRole(role) {
+            currentRole = role;
+
+            document.querySelectorAll('.role-btn').forEach(btn => {
+                btn.classList.remove('bg-white', 'text-sage-900', 'shadow-sm', 'bg-sage-700', 'text-white');
+                btn.classList.add('text-sage-700', 'hover:bg-sage-200/50');
+            });
+
+            const activeBtn = document.getElementById(`roleBtn-${role}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-sage-700', 'hover:bg-sage-200/50');
+                activeBtn.classList.add('bg-white', 'text-sage-900', 'shadow-sm');
+            }
+
+            document.querySelectorAll('.role-view').forEach(view => view.classList.add('hidden'));
+            const targetView = document.getElementById(`view-${role}`);
+            if (targetView) targetView.classList.remove('hidden');
+
+            const descEl = document.getElementById('roleDescription');
+            if (role === 'cadet') {
+                descEl.innerHTML = `<i class="fa-solid fa-user-graduate text-sage-600"></i><span><strong>Cadet Portal:</strong> Authenticated cadet registration and sick report entry.</span>`;
+            } else if (role === 'hm') {
+                descEl.innerHTML = `<i class="fa-solid fa-house-chimney-medical text-sage-600"></i><span><strong>Housemaster Station:</strong> Encrypted permissions desk for Taramon, Sitara, and Razia.</span>`;
+            } else if (role === 'ha') {
+                descEl.innerHTML = `<i class="fa-solid fa-bed-pulse text-sage-600"></i><span><strong>Hospital Attendant Desk:</strong> Night shift log & morning parade preparation.</span>`;
+            } else if (role === 'mo') {
+                descEl.innerHTML = `<i class="fa-solid fa-user-doctor text-sage-600"></i><span><strong>Medical Officer Terminal:</strong> Authorized doctor station for JGCC hospital.</span>`;
+            }
+
+            renderCurrentRoleView();
+        }
+
+        function renderCurrentRoleView() {
+            updateBadgesAndStats();
+            if (currentRole === 'cadet') renderCadetPortal();
+            if (currentRole === 'hm') renderHmPortal();
+            if (currentRole === 'ha') renderHaPortal();
+            if (currentRole === 'mo') renderMoPortal();
+        }
+
+        /* --- CADET PORTAL --- */
+
+        function toggleAuthTab(tab) {
+            const loginForm = document.getElementById('cadetLoginForm');
+            const regForm = document.getElementById('cadetRegisterForm');
+            const tabLogin = document.getElementById('tabBtn-login');
+            const tabReg = document.getElementById('tabBtn-register');
+
+            if (tab === 'login') {
+                loginForm.classList.remove('hidden');
+                regForm.classList.add('hidden');
+                tabLogin.className = "flex-1 py-2 text-xs font-bold rounded-xl transition-all bg-white text-sage-900 shadow";
+                tabReg.className = "flex-1 py-2 text-xs font-bold rounded-xl transition-all text-sage-200 hover:text-white";
+            } else {
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+                tabReg.className = "flex-1 py-2 text-xs font-bold rounded-xl transition-all bg-white text-sage-900 shadow";
+                tabLogin.className = "flex-1 py-2 text-xs font-bold rounded-xl transition-all text-sage-200 hover:text-white";
+            }
+        }
+
+        async function handleCadetRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const cadetNo = document.getElementById('regCadetNo').value.trim();
+            const cadetClass = document.getElementById('regClass').value;
+            const house = document.getElementById('regHouse').value;
+            const password = document.getElementById('regPassword').value.trim();
+
+            const existing = registeredCadets.find(c => c.cadetNo.toLowerCase() === cadetNo.toLowerCase());
+            if (existing) {
+                showToast(`Cadet No ${cadetNo} is already registered! Please log in.`, "warning");
+                toggleAuthTab('login');
+                document.getElementById('loginCadetNo').value = cadetNo;
+                return;
+            }
+
+            const passwordHash = await sha256(password);
+            const newCadet = { name, cadetNo, cadetClass, house, passwordHash };
+            registeredCadets.push(newCadet);
+            saveCadets();
+
+            activeCadet = newCadet;
+            localStorage.setItem(SESSION_CADET_KEY, JSON.stringify(activeCadet));
+
+            document.getElementById('cadetRegisterForm').reset();
+            showToast(`Cadet ${name} (#${cadetNo}) registered successfully!`, "success");
+            renderCadetPortal();
+        }
+
+        async function handleCadetLogin(e) {
+            e.preventDefault();
+            const cadetNo = document.getElementById('loginCadetNo').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const passwordHash = await sha256(password);
+
+            const found = registeredCadets.find(c => c.cadetNo.toLowerCase() === cadetNo.toLowerCase() && c.passwordHash === passwordHash);
+            if (!found) {
+                showToast("Invalid Cadet No or Encrypted Password.", "warning");
+                return;
+            }
+
+            activeCadet = found;
+            localStorage.setItem(SESSION_CADET_KEY, JSON.stringify(activeCadet));
+
+            document.getElementById('cadetLoginForm').reset();
+            showToast(`Welcome back, ${activeCadet.name}!`, "success");
+            renderCadetPortal();
+        }
+
+        function cadetLogout() {
+            activeCadet = null;
+            localStorage.removeItem(SESSION_CADET_KEY);
+            renderCadetPortal();
+            showToast("Cadet session ended.", "info");
+        }
+
+        function renderCadetPortal() {
+            const authContainer = document.getElementById('cadetAuthContainer');
+            const dashboard = document.getElementById('cadetDashboard');
+
+            if (!activeCadet) {
+                authContainer.classList.remove('hidden');
+                dashboard.classList.add('hidden');
+            } else {
+                authContainer.classList.add('hidden');
+                dashboard.classList.remove('hidden');
+
+                document.getElementById('activeCadetName').textContent = activeCadet.name;
+                document.getElementById('activeCadetNoBadge').textContent = `#${activeCadet.cadetNo}`;
+                document.getElementById('activeCadetHouseBadge').innerHTML = getHouseBadgeHtml(activeCadet.house);
+                document.getElementById('activeCadetClass').textContent = activeCadet.cadetClass;
+                document.getElementById('activeCadetAvatar').textContent = activeCadet.name.charAt(0).toUpperCase();
+
+                renderCadetPersonalReports();
+            }
+        }
+
+        function handleCadetSubmitReport(e) {
+            e.preventDefault();
+            if (!activeCadet) return;
+
+            const symptom = document.getElementById('symptom').value.trim();
+            const severity = document.getElementById('severity').value;
+            const onsetTime = document.getElementById('onsetTime').value;
+            const notes = document.getElementById('cadetNotes').value.trim();
+
+            const newReport = {
+                id: 'JGCC-' + Math.floor(1000 + Math.random() * 9000),
+                cadetNo: activeCadet.cadetNo,
+                cadetName: activeCadet.name,
+                house: activeCadet.house,
+                cadetClass: activeCadet.cadetClass,
+                symptom,
+                severity,
+                onsetTime,
+                notes,
+                timestamp: new Date().toISOString(),
+                hmApproved: false,
+                hmTimestamp: null,
+                haNotified: false,
+                moChecked: false,
+                moDiagnosis: '',
+                moPrescription: '',
+                moDisposition: '',
+                moTimestamp: null
+            };
+
+            reports.unshift(newReport);
+            saveReports();
+
+            document.getElementById('symptom').value = '';
+            document.getElementById('cadetNotes').value = '';
+
+            renderCadetPersonalReports();
+            showToast(`Sick call entry submitted to ${activeCadet.house} Housemaster!`, "success");
+        }
+
+        function renderCadetPersonalReports() {
+            if (!activeCadet) return;
+
+            const container = document.getElementById('cadetPersonalReportsList');
+            const myReports = reports.filter(r => r.cadetNo.toLowerCase() === activeCadet.cadetNo.toLowerCase());
+
+            if (myReports.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 text-sage-400 bg-sage-50/50 rounded-2xl border border-dashed border-sage-200">
+                        <i class="fa-solid fa-notes-medical text-3xl mb-2 text-sage-300"></i>
+                        <p class="text-xs font-semibold text-sage-600">No active sick reports registered yet.</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = myReports.map(r => {
+                let stageBadge = '';
+                if (r.moChecked) {
+                    stageBadge = `<span class="bg-emerald-100 text-emerald-900 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1"><i class="fa-solid fa-square-check text-emerald-600"></i> MO Approved: ${r.moDisposition}</span>`;
+                } else if (r.hmApproved) {
+                    stageBadge = `<span class="bg-sky-100 text-sky-900 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-sky-200 flex items-center gap-1"><i class="fa-solid fa-share"></i> Housemaster Permitted → Sent to MO Desk</span>`;
+                } else {
+                    stageBadge = `<span class="bg-amber-100 text-amber-900 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-amber-200 flex items-center gap-1"><i class="fa-solid fa-hourglass"></i> Pending Housemaster Permission</span>`;
+                }
+
+                return `
+                    <div class="bg-sage-50/60 hover:bg-sage-50 p-4 rounded-2xl border border-sage-200 transition-all space-y-2">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div class="flex items-center space-x-2">
+                                <span class="font-mono text-xs font-bold text-sage-500">${r.id}</span>
+                                <span class="font-bold text-sm text-sage-950">${r.cadetName}</span>
+                                ${getHouseBadgeHtml(r.house)}
+                            </div>
+                            <div>${stageBadge}</div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-sage-800 bg-white p-3 rounded-xl border border-sage-200/80">
+                            <div><strong class="text-sage-500 block text-[10px] uppercase">Problem:</strong> ${r.symptom} (${r.severity})</div>
+                            <div><strong class="text-sage-500 block text-[10px] uppercase">Onset:</strong> ${r.onsetTime}</div>
+                            <div><strong class="text-sage-500 block text-[10px] uppercase">Reported:</strong> ${new Date(r.timestamp).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})}</div>
+                        </div>
+
+                        ${r.moChecked ? `
+                            <div class="bg-emerald-50/80 border-l-2 border-emerald-600 p-3 rounded-r-xl text-xs space-y-1">
+                                <p class="font-bold text-emerald-950"><i class="fa-solid fa-stethoscope mr-1 text-emerald-700"></i> Doctor Diagnosis: ${r.moDiagnosis}</p>
+                                ${r.moPrescription ? `<p class="text-emerald-800 text-[11px]"><strong class="font-semibold">Prescription:</strong> ${r.moPrescription}</p>` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /* --- HOUSEMASTER DESK --- */
+
+        async function handleHmLogin(e) {
+            e.preventDefault();
+            const house = document.getElementById('hmLoginHouse').value;
+            const passkey = document.getElementById('hmLoginPasskey').value.trim();
+            const passHash = await sha256(passkey);
+
+            if (passHash === passkeyHashes[house]) {
+                activeHmHouse = house;
+                localStorage.setItem(SESSION_HM_KEY, activeHmHouse);
+                document.getElementById('hmLoginForm').reset();
+                showToast(`Authenticated as ${house} Housemaster!`, "success");
+                renderHmPortal();
+            } else {
+                showToast(`Invalid Passkey for ${house}. Access Denied.`, "warning");
+            }
+        }
+
+        function hmLogout() {
+            activeHmHouse = null;
+            localStorage.removeItem(SESSION_HM_KEY);
+            renderHmPortal();
+            showToast("Housemaster Desk locked.", "info");
+        }
+
+        function renderHmPortal() {
+            const lockView = document.getElementById('hmAuthLock');
+            const dashboard = document.getElementById('hmDashboard');
+
+            if (!activeHmHouse) {
+                lockView.classList.remove('hidden');
+                dashboard.classList.add('hidden');
+            } else {
+                lockView.classList.add('hidden');
+                dashboard.classList.remove('hidden');
+
+                document.getElementById('activeHmHouseTitle').textContent = `${activeHmHouse} Housemaster`;
+                document.getElementById('activeHmHouseName').textContent = activeHmHouse;
+                document.getElementById('activeHmAvatar').textContent = activeHmHouse.charAt(0);
+
+                renderHmReports();
+            }
+        }
+
+        function renderHmReports() {
+            if (!activeHmHouse) return;
+            const tableBody = document.getElementById('hmTableBody');
+
+            const houseReports = reports.filter(r => r.house === activeHmHouse);
+
+            if (houseReports.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-8 text-sage-400">
+                            <i class="fa-solid fa-circle-check text-2xl mb-2 text-sage-300 block"></i>
+                            No sick reports registered for ${activeHmHouse}.
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = houseReports.map(r => {
+                const isApproved = r.hmApproved;
+
+                return `
+                    <tr class="hover:bg-sage-50 transition-colors">
+                        <td class="py-3 px-4">
+                            <label class="inline-flex items-center space-x-2 cursor-pointer bg-white px-3 py-1.5 rounded-xl border border-sage-200 shadow-sm hover:border-sage-400 transition-all">
+                                <input type="checkbox" ${isApproved ? 'checked' : ''} onchange="toggleHmPermission('${r.id}', this.checked)" class="w-4 h-4 text-sage-700 rounded border-sage-300 focus:ring-sage-500 cursor-pointer">
+                                <span class="text-xs font-bold ${isApproved ? 'text-sage-800' : 'text-sage-600'}">
+                                    ${isApproved ? 'Permitted' : 'Grant Permission'}
+                                </span>
+                            </label>
+                        </td>
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-sage-950">${r.cadetName}</div>
+                            <div class="text-[11px] font-mono text-sage-500">Cadet No: ${r.cadetNo}</div>
+                        </td>
+                        <td class="py-3 px-4">
+                            ${getHouseBadgeHtml(r.house)}
+                            <div class="text-[11px] text-sage-500 mt-1 font-semibold">${r.cadetClass}</div>
+                        </td>
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-sage-900">${r.symptom}</div>
+                            <div class="text-[11px] text-sage-600 font-bold">Severity: ${r.severity}</div>
+                        </td>
+                        <td class="py-3 px-4 text-sage-500 text-[11px]">
+                            ${new Date(r.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </td>
+                        <td class="py-3 px-4">
+                            ${r.moChecked 
+                                ? `<span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-check-double mr-1"></i> MO Approved</span>`
+                                : isApproved 
+                                    ? `<span class="bg-sky-100 text-sky-800 text-[11px] font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-paper-plane mr-1"></i> Sent to MO Desk</span>`
+                                    : `<span class="bg-amber-100 text-amber-800 text-[11px] font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-clock mr-1"></i> Pending Permission</span>`
+                            }
+                        </td>
+                        <td class="py-3 px-4 text-right">
+                            ${!isApproved ? `
+                                <button onclick="toggleHmPermission('${r.id}', true)" class="px-3 py-1 bg-sage-700 hover:bg-sage-800 text-white font-bold rounded-lg text-[11px] shadow-sm">
+                                    Tick Approve
+                                </button>
+                            ` : `<span class="text-xs text-sage-700 font-bold"><i class="fa-solid fa-check mr-1"></i> Permitted</span>`}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function toggleHmPermission(reportId, checked) {
+            const report = reports.find(r => r.id === reportId);
+            if (!report) return;
+
+            if (report.house !== activeHmHouse) {
+                showToast(`Unauthorized! Logged in as ${activeHmHouse} Housemaster.`, "warning");
+                return;
+            }
+
+            report.hmApproved = checked;
+            report.hmTimestamp = checked ? new Date().toISOString() : null;
+            if (checked) {
+                report.haNotified = true;
+            }
+
+            saveReports();
+            renderHmReports();
+            showToast(checked ? `Permission granted for ${report.cadetName}. Sent to MO Terminal!` : `Permission revoked.`, checked ? "success" : "info");
+        }
+
+        /* --- HOSPITAL ATTENDANT --- */
+
+        async function handleHaLogin(e) {
+            e.preventDefault();
+            const passkey = document.getElementById('haLoginPasskey').value.trim();
+            const passHash = await sha256(passkey);
+
+            if (passHash === passkeyHashes['HA']) {
+                isHaAuthenticated = true;
+                localStorage.setItem(SESSION_HA_KEY, 'true');
+                document.getElementById('haLoginForm').reset();
+                showToast("Hospital Attendant Station Authenticated!", "success");
+                renderHaPortal();
+            } else {
+                showToast("Invalid Hospital Attendant Security Key.", "warning");
+            }
+        }
+
+        function haLogout() {
+            isHaAuthenticated = false;
+            localStorage.removeItem(SESSION_HA_KEY);
+            renderHaPortal();
+            showToast("Attendant Station Locked.", "info");
+        }
+
+        function renderHaPortal() {
+            const lockView = document.getElementById('haAuthLock');
+            const dashboard = document.getElementById('haDashboard');
+
+            if (!isHaAuthenticated) {
+                lockView.classList.remove('hidden');
+                dashboard.classList.add('hidden');
+            } else {
+                lockView.classList.add('hidden');
+                dashboard.classList.remove('hidden');
+                renderHaReports();
+            }
+        }
+
+        function renderHaReports() {
+            const tableBody = document.getElementById('haTableBody');
+            const houseFilter = document.getElementById('haHouseFilter').value;
+
+            let approved = reports.filter(r => r.hmApproved);
+            if (houseFilter !== 'ALL') {
+                approved = approved.filter(r => r.house === houseFilter);
+            }
+
+            if (approved.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-8 text-sage-400">
+                            No Housemaster-permitted reports recorded.
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = approved.map(r => `
+                <tr class="hover:bg-sage-50 transition-colors">
+                    <td class="py-3 px-4">
+                        <div class="font-bold text-sage-950">${r.cadetName}</div>
+                        <div class="text-[11px] font-mono text-sage-500">Cadet No: ${r.cadetNo} • ${r.cadetClass}</div>
+                    </td>
+                    <td class="py-3 px-4">${getHouseBadgeHtml(r.house)}</td>
+                    <td class="py-3 px-4">
+                        <div class="font-bold text-sage-900">${r.symptom}</div>
+                        <div class="text-[11px] text-sage-500">Onset: ${r.onsetTime}</div>
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="bg-sky-100 text-sky-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center w-fit gap-1">
+                            <i class="fa-solid fa-square-check"></i> HM Permitted
+                        </span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <span class="bg-sage-100 text-sage-800 text-[11px] font-bold px-2.5 py-1 rounded-lg inline-flex items-center space-x-1 border border-sage-200">
+                            <i class="fa-solid fa-moon text-sage-600"></i>
+                            <span>Night Shift Logged</span>
+                        </span>
+                    </td>
+                    <td class="py-3 px-4">
+                        ${r.moChecked 
+                            ? `<span class="bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-circle-check mr-1"></i> MO Approved</span>`
+                            : `<span class="bg-amber-100 text-amber-800 text-[11px] font-bold px-2 py-0.5 rounded-full"><i class="fa-solid fa-laptop-medical mr-1"></i> Queued on MO Terminal</span>`
+                        }
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        /* --- SOLE MEDICAL OFFICER DESK --- */
+
+        async function handleMoLogin(e) {
+            e.preventDefault();
+            const passkey = document.getElementById('moLoginPasskey').value.trim();
+            const passHash = await sha256(passkey);
+
+            if (passHash === passkeyHashes['MO']) {
+                isMoAuthenticated = true;
+                localStorage.setItem(SESSION_MO_KEY, 'true');
+                document.getElementById('moLoginForm').reset();
+                showToast("Medical Officer Terminal Authenticated!", "success");
+                renderMoPortal();
+            } else {
+                showToast("Invalid Medical Officer Security Key.", "warning");
+            }
+        }
+
+        function moLogout() {
+            isMoAuthenticated = false;
+            localStorage.removeItem(SESSION_MO_KEY);
+            renderMoPortal();
+            showToast("Medical Officer Terminal locked.", "info");
+        }
+
+        function renderMoPortal() {
+            const lockView = document.getElementById('moAuthLock');
+            const dashboard = document.getElementById('moDashboard');
+
+            if (!isMoAuthenticated) {
+                lockView.classList.remove('hidden');
+                dashboard.classList.add('hidden');
+            } else {
+                lockView.classList.add('hidden');
+                dashboard.classList.remove('hidden');
+                renderMoReports();
+            }
+        }
+
+        function renderMoReports() {
+            const tableBody = document.getElementById('moTableBody');
+            const houseFilter = document.getElementById('moHouseFilter').value;
+
+            let moQueue = reports.filter(r => r.hmApproved);
+            if (houseFilter !== 'ALL') {
+                moQueue = moQueue.filter(r => r.house === houseFilter);
+            }
+
+            if (moQueue.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-8 text-sage-400">
+                            <i class="fa-solid fa-laptop-medical text-2xl mb-2 text-sage-300 block"></i>
+                            No housemaster-permitted sick reports queued.
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = moQueue.map(r => {
+                const isChecked = r.moChecked;
+
+                return `
+                    <tr class="${isChecked ? 'bg-emerald-50/40' : 'hover:bg-sage-50'} transition-colors border-b border-sage-100">
+                        <td class="py-3 px-4">
+                            <label class="inline-flex items-center space-x-2 cursor-pointer bg-white px-3 py-1.5 rounded-xl border ${isChecked ? 'border-emerald-500 text-emerald-900' : 'border-sage-200 text-sage-700'} shadow-sm hover:border-emerald-600 transition-all">
+                                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="handleMoCheckboxClick('${r.id}', this.checked)" class="w-4 h-4 text-emerald-600 rounded border-sage-300 focus:ring-emerald-500 cursor-pointer">
+                                <span class="text-xs font-bold">
+                                    ${isChecked ? 'MO Approved' : 'MO Checkmark'}
+                                </span>
+                            </label>
+                        </td>
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-sage-950">${r.cadetName}</div>
+                            <div class="text-[11px] font-mono text-sage-500">Cadet No: ${r.cadetNo}</div>
+                        </td>
+                        <td class="py-3 px-4">
+                            ${getHouseBadgeHtml(r.house)}
+                            <div class="text-[11px] text-sage-500 mt-1 font-semibold">${r.cadetClass}</div>
+                        </td>
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-sage-900">${r.symptom}</div>
+                            <div class="text-[11px] text-sage-500">Onset: ${r.onsetTime}</div>
+                        </td>
+                        <td class="py-3 px-4">
+                            <span class="bg-sky-100 text-sky-800 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center w-fit gap-1">
+                                <i class="fa-solid fa-check"></i> HM Permitted
+                            </span>
+                        </td>
+                        <td class="py-3 px-4">
+                            ${isChecked 
+                                ? `<div>
+                                    <div class="font-bold text-emerald-950">${r.moDiagnosis}</div>
+                                    <div class="text-[11px] text-emerald-800 font-semibold">Disposition: ${r.moDisposition}</div>
+                                   </div>`
+                                : `<span class="text-xs text-amber-700 font-bold italic">Awaiting Examination</span>`
+                            }
+                        </td>
+                        <td class="py-3 px-4 text-right">
+                            <button onclick="openMoModal('${r.id}')" class="px-3 py-1.5 ${isChecked ? 'bg-sage-100 text-sage-800 hover:bg-sage-200' : 'bg-sage-700 text-white hover:bg-sage-800'} font-bold rounded-xl text-xs shadow-sm transition-colors flex items-center space-x-1.5 ml-auto">
+                                <i class="fa-solid fa-stethoscope"></i>
+                                <span>${isChecked ? 'Edit Prescription' : 'Examine & Prescribe'}</span>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function handleMoCheckboxClick(reportId, isChecked) {
+            if (!isMoAuthenticated) {
+                showToast("Medical Officer authentication required!", "warning");
+                return;
+            }
+            if (isChecked) {
+                openMoModal(reportId);
+            } else {
+                const report = reports.find(r => r.id === reportId);
+                if (report) {
+                    report.moChecked = false;
+                    saveReports();
+                    renderMoReports();
+                    showToast(`Revoked MO approval for ${report.cadetName}.`, "info");
+                }
+            }
+        }
+
+        function openMoModal(reportId) {
+            const report = reports.find(r => r.id === reportId);
+            if (!report) return;
+
+            document.getElementById('modalReportId').value = report.id;
+            document.getElementById('modalCadetTitle').textContent = `Cadet ${report.cadetNo} - ${report.cadetName} (${report.house}, ${report.cadetClass})`;
+            document.getElementById('modalSymptomText').textContent = `Complaint: ${report.symptom} | Onset: ${report.onsetTime}`;
+
+            document.getElementById('moDiagnosis').value = report.moDiagnosis || '';
+            document.getElementById('moPrescription').value = report.moPrescription || '';
+            document.getElementById('moDisposition').value = report.moDisposition || 'Attended & Fit for Duty';
+
+            document.getElementById('moModal').classList.remove('hidden');
+        }
+
+        function closeMoModal() {
+            document.getElementById('moModal').classList.add('hidden');
+        }
+
+        function saveMoDiagnosis(e) {
+            e.preventDefault();
+            const reportId = document.getElementById('modalReportId').value;
+            const report = reports.find(r => r.id === reportId);
+
+            if (report) {
+                report.moDiagnosis = document.getElementById('moDiagnosis').value.trim();
+                report.moPrescription = document.getElementById('moPrescription').value.trim();
+                report.moDisposition = document.getElementById('moDisposition').value;
+                report.moChecked = true;
+                report.moTimestamp = new Date().toISOString();
+
+                saveReports();
+                closeMoModal();
+                renderMoReports();
+                showToast(`Prescription saved by Duty Medical Officer!`, "success");
+            }
+        }
+
+        /* --- HELPER UTILITIES & BADGES --- */
+
+        function getHouseBadgeHtml(houseName) {
+            if (houseName === 'Taramon House') {
+                return `<span class="bg-red-50 text-[#D32F2F] border border-red-200 px-2 py-0.5 rounded-md text-[11px] font-bold inline-flex items-center"><i class="fa-solid fa-circle text-[#D32F2F] text-[6px] mr-1"></i> Taramon</span>`;
+            } else if (houseName === 'Sitara House') {
+                return `<span class="bg-blue-50 text-[#1976D2] border border-blue-200 px-2 py-0.5 rounded-md text-[11px] font-bold inline-flex items-center"><i class="fa-solid fa-circle text-[#1976D2] text-[6px] mr-1"></i> Sitara</span>`;
+            } else if (houseName === 'Razia House') {
+                return `<span class="bg-emerald-50 text-[#2E7D32] border border-emerald-200 px-2 py-0.5 rounded-md text-[11px] font-bold inline-flex items-center"><i class="fa-solid fa-circle text-[#2E7D32] text-[6px] mr-1"></i> Razia</span>`;
+            }
+            return `<span class="bg-sage-100 text-sage-800 px-2 py-0.5 rounded-md text-[11px] font-bold">${houseName}</span>`;
+        }
+
+        function updateBadgesAndStats() {
+            const pendingHm = reports.filter(r => !r.hmApproved).length;
+            const approvedHm = reports.filter(r => r.hmApproved).length;
+            const pendingMo = reports.filter(r => r.hmApproved && !r.moChecked).length;
+
+            const hmBadge = document.getElementById('hmBadgeCount');
+            if (hmBadge) {
+                if (pendingHm > 0) {
+                    hmBadge.textContent = pendingHm;
+                    hmBadge.classList.remove('hidden');
+                } else {
+                    hmBadge.classList.add('hidden');
+                }
+            }
+
+            const haBadge = document.getElementById('haBadgeCount');
+            if (haBadge) {
+                if (approvedHm > 0) {
+                    haBadge.textContent = approvedHm;
+                    haBadge.classList.remove('hidden');
+                } else {
+                    haBadge.classList.add('hidden');
+                }
+            }
+
+            const moBadge = document.getElementById('moBadgeCount');
+            if (moBadge) {
+                if (pendingMo > 0) {
+                    moBadge.textContent = pendingMo;
+                    moBadge.classList.remove('hidden');
+                } else {
+                    moBadge.classList.add('hidden');
+                }
+            }
+        }
+
+        function printNightDutySummary() {
+            const approved = reports.filter(r => r.hmApproved);
+            document.getElementById('printDateStr').textContent = `Generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`;
+
+            const content = document.getElementById('printContent');
+            if (approved.length === 0) {
+                content.innerHTML = `<p class="text-center text-sage-500 py-4 font-medium">No approved sick reports recorded for today's MI parade.</p>`;
+            } else {
+                content.innerHTML = `
+                    <div class="border border-sage-200 rounded-2xl overflow-hidden">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-sage-100 text-sage-900 font-bold border-b border-sage-200">
+                                    <th class="p-2.5">Cadet No</th>
+                                    <th class="p-2.5">Name</th>
+                                    <th class="p-2.5">House</th>
+                                    <th class="p-2.5">Symptom</th>
+                                    <th class="p-2.5">HM Permission</th>
+                                    <th class="p-2.5">MO Disposition</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-sage-100">
+                                ${approved.map(r => `
+                                    <tr>
+                                        <td class="p-2.5 font-mono font-bold">${r.cadetNo}</td>
+                                        <td class="p-2.5 font-bold text-sage-950">${r.cadetName}</td>
+                                        <td class="p-2.5 font-semibold">${r.house}</td>
+                                        <td class="p-2.5">${r.symptom}</td>
+                                        <td class="p-2.5 text-sky-800 font-bold">Permitted</td>
+                                        <td class="p-2.5">${r.moChecked ? r.moDisposition : 'Awaiting MO Examination'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            document.getElementById('printModal').classList.remove('hidden');
+        }
+
+        function closePrintModal() {
+            document.getElementById('printModal').classList.add('hidden');
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+
+            let icon = 'fa-circle-info';
+            let bgClass = 'bg-sage-900 text-white';
+
+            if (type === 'success') {
+                icon = 'fa-circle-check';
+                bgClass = 'bg-sage-700 text-white';
+            } else if (type === 'warning') {
+                icon = 'fa-triangle-exclamation';
+                bgClass = 'bg-amber-600 text-white';
+            }
+
+            toast.className = `${bgClass} pointer-events-auto px-4 py-3 rounded-2xl shadow-xl text-xs font-bold flex items-center space-x-2 transition-all duration-300 transform translate-y-2 opacity-0 max-w-sm border border-white/20`;
+            toast.innerHTML = `
+                <i class="fa-solid ${icon} text-sm"></i>
+                <span class="flex-1">${message}</span>
+            `;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+    </script>
+</body>
+</html>
